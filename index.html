@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suno Prompt Builder | demosaii — Free AI Music Prompt Generator</title>
+
+<!-- SEO -->
+<meta name="description" content="Build perfect Suno AI music prompts with 13 genres, 70+ instruments, Korean vocal delivery, production FX, and quick presets. Free tool by demosaii.">
+<meta name="keywords" content="suno, suno ai, prompt builder, music prompt, ai music, k-pop, k-hip-hop, korean music, prompt generator, suno prompt, demosaii">
+<meta name="author" content="demosaii">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://demoslady.github.io/suno-prompt-builder/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://demoslady.github.io/suno-prompt-builder/">
+<meta property="og:title" content="Suno Prompt Builder — Free AI Music Prompt Generator">
+<meta property="og:description" content="Build perfect Suno AI music prompts with 13 genres, 70+ instruments, Korean vocal delivery, and production FX. Free tool by demosaii.">
+<meta property="og:site_name" content="demosaii">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Suno Prompt Builder — Free AI Music Prompt Generator">
+<meta name="twitter:description" content="Build perfect Suno AI music prompts with genres, instruments, vocals, and FX controls. Free tool by demosaii.">
+<meta name="twitter:creator" content="@demosaii">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Suno Prompt Builder",
+  "description": "Build perfect Suno AI music prompts with genre, mood, instruments, vocals, and production FX controls.",
+  "url": "https://demoslady.github.io/suno-prompt-builder/",
+  "applicationCategory": "MusicApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "demosaii", "url": "https://instagram.com/demosaii" }
+}
+</script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5RGZRN1YF"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());gtag('config','G-Z5RGZRN1YF');
+</script>
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎛️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08080e;color:#e8e8f0;font-family:'JetBrains Mono','Fira Code',monospace;overflow-x:hidden}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#e84393;cursor:pointer;border:2px solid #08080e}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#e84393;cursor:pointer;border:2px solid #08080e}
+::selection{background:#e8439344}
+textarea:focus,input:focus{outline:none;border-color:#e84393!important}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#08080e}::-webkit-scrollbar-thumb{background:#252538;border-radius:3px}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+button:hover{filter:brightness(1.1)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback}=React;
+const h=React.createElement;
+
+const GENRES={"K-Hip-Hop":{icon:"\u{1F3A4}",sub:["Trap","Boom Bap","Cloud Rap","Drill","Old School","Conscious","Aggressive","Melodic"]},"K-Pop":{icon:"\u{1F49C}",sub:["Boy Group","Girl Group","Ballad Pop","Dance Pop","Retro Pop","City Pop","Synth Pop","Bubblegum"]},"K-R&B":{icon:"\u{1F319}",sub:["Slow Jam","Neo-Soul","Alternative R&B","Bedroom R&B","Jazzy R&B","Dark R&B"]},"K-Rock":{icon:"\u{1F3B8}",sub:["Alternative","Indie","Post-Punk","Shoegaze","Pop Rock","Hard Rock","Punk","Grunge"]},"K-Ballad":{icon:"\u{1F3B9}",sub:["Piano Ballad","Orchestral","Acoustic","Power Ballad","Slow Ballad","Folk Ballad"]},"Traditional Korean":{icon:"\u{1F3EF}",sub:["Gayageum","Haegeum","Samulnori","Arirang Fusion","Folk Fusion","Court Music"]},"Electronic":{icon:"\u26A1",sub:["House","Techno","Future Bass","Lo-fi","Drum & Bass","Jersey Club","Dubstep","Ambient"]},"Hip-Hop":{icon:"\u{1F525}",sub:["East Coast","West Coast","Southern Trap","UK Grime","Mumble Rap","Lyrical","Freestyle"]},"Rock":{icon:"\u{1F918}",sub:["Classic Rock","Metal","Emo","Progressive","Psychedelic","Garage","Blues Rock"]},"R&B / Soul":{icon:"\u{1F4BF}",sub:["Classic Soul","Modern R&B","Funk","Gospel","Motown","Quiet Storm"]},"Jazz":{icon:"\u{1F3B7}",sub:["Smooth Jazz","Bebop","Fusion","Vocal Jazz","Nu Jazz","Acid Jazz"]},"Latin":{icon:"\u{1F483}",sub:["Reggaeton","Bachata","Salsa","Latin Pop","Bossa Nova","Cumbia"]},"Other":{icon:"\u{1F30D}",sub:["Afrobeat","Dancehall","Country","Folk","Classical","Cinematic","Chiptune","Vaporwave"]}};
+
+const MOODS=[{name:"Dark & Intense",emoji:"\u{1F5A4}",tags:["minor key","heavy bass","distorted","aggressive energy"]},{name:"Melancholic",emoji:"\u{1F327}\uFE0F",tags:["sad","emotional","longing","bittersweet melody"]},{name:"Euphoric",emoji:"\u2728",tags:["uplifting","bright","soaring chorus","major key"]},{name:"Chill & Dreamy",emoji:"\u2601\uFE0F",tags:["relaxed","floaty","reverb-heavy","ambient pads"]},{name:"Energetic",emoji:"\u26A1",tags:["high energy","fast tempo","driving beat","hype"]},{name:"Romantic",emoji:"\u{1F339}",tags:["warm","intimate","soft vocals","tender melody"]},{name:"Rebellious",emoji:"\u{1F525}",tags:["defiant","raw","punk energy","anti-establishment"]},{name:"Nostalgic",emoji:"\u{1F4FC}",tags:["retro","vintage","throwback feel","warm analog"]},{name:"Mysterious",emoji:"\u{1F311}",tags:["eerie","suspenseful","cinematic tension","atmospheric"]},{name:"Playful",emoji:"\u{1F3AA}",tags:["fun","quirky","bouncy","lighthearted groove"]},{name:"Epic",emoji:"\u2694\uFE0F",tags:["cinematic","orchestral swells","grandiose","powerful build"]},{name:"Groovy",emoji:"\u{1F57A}",tags:["funky","rhythmic","danceable","infectious groove"]}];
+
+const INSTRUMENTS={"Strings":["Gayageum","Haegeum","Violin","Cello","Viola","Erhu","Guitar (Acoustic)","Guitar (Electric)","Bass Guitar","Ukulele","Harp","Pipa","Geomungo"],"Keys & Synths":["Piano","Rhodes","Organ","Synth Pad","Synth Lead","Moog","Wurlitzer","Harpsichord","Korg M1","808 Synth Bass","Vocoder"],"Percussion":["Janggu","Buk","Kkwaenggwari","Jing","808 Drums","Trap Hi-hats","Boom Bap Drums","Live Drums","Taiko","Tabla","Cajon","Finger Snaps","Claps"],"Wind":["Daegeum","Piri","Sogeum","Flute","Saxophone","Trumpet","Clarinet","Harmonica","Shakuhachi"],"Vocal FX":["Vocal Chops","Ad-libs","Whisper Layers","Choir","Falsetto Harmonies","Vocal Distortion","Autotune","Gregorian Chant","Throat Singing"],"Electronic":["808 Bass","Sub Bass","Vinyl Crackle","Tape Hiss","Glitch FX","Siren","Riser","Drop FX","Reversed Cymbal","White Noise Sweep"]};
+
+const VOCAL_STYLES=["Powerful rap delivery","Melodic rap flow","Aggressive rap","Whisper rap","Double-time rap","Smooth R&B vocals","Breathy vocals","Falsetto","Belting","Raspy vocals","K-hip-hop vocal delivery","Native Korean pronunciation","Korean rap with English hooks","Emotional ballad singing","Spoken word","Chanting","Call and response","Layered harmonies","Unison vocals","Ad-lib heavy","Vocal runs"];
+
+const STRUCTURES=[{name:"Standard",pattern:"Verse \u2192 Chorus \u2192 Verse \u2192 Chorus \u2192 Bridge \u2192 Chorus"},{name:"Hip-Hop",pattern:"Intro \u2192 Verse 1 \u2192 Hook \u2192 Verse 2 \u2192 Hook \u2192 Verse 3 \u2192 Hook \u2192 Outro"},{name:"K-Pop",pattern:"Intro \u2192 Verse \u2192 Pre-Chorus \u2192 Chorus \u2192 Verse \u2192 Pre-Chorus \u2192 Chorus \u2192 Bridge \u2192 Final Chorus \u2192 Outro"},{name:"Ballad",pattern:"Intro \u2192 Verse 1 \u2192 Verse 2 \u2192 Chorus \u2192 Verse 3 \u2192 Chorus \u2192 Bridge \u2192 Final Chorus"},{name:"Build-up",pattern:"Ambient Intro \u2192 Slow Build \u2192 Drop \u2192 Build \u2192 Bigger Drop \u2192 Outro"},{name:"Cinematic",pattern:"Prologue \u2192 Rising Action \u2192 Climax \u2192 Resolution \u2192 Epilogue"},{name:"Freestyle",pattern:"No fixed structure \u2014 continuous flow"},{name:"Anthem",pattern:"Power Intro \u2192 Verse 1 \u2192 Pre-Chorus \u2192 Chorus \u2192 Verse 2 \u2192 Chorus \u2192 Rap Break \u2192 Final Chorus \u2192 Outro"}];
+
+const TEMPO_RANGES=[{label:"Very Slow",bpm:"60-80"},{label:"Slow",bpm:"80-100"},{label:"Medium",bpm:"100-120"},{label:"Fast",bpm:"120-140"},{label:"Very Fast",bpm:"140-170"},{label:"Extreme",bpm:"170-200+"}];
+
+const PRODUCTION_FX=["Heavy reverb","Lo-fi texture","Vinyl crackle","Tape saturation","Bit-crush","Sidechain compression","Stereo widening","Pitch shifting","Time stretch","Delay throws","Filter sweep","Distortion","Phaser","Flanger","Tremolo","Granular synthesis","Reverse effects","Chopped & screwed","808 glide","Sub drops","Risers & impacts","White noise transitions"];
+
+const PRESETS=[
+  {name:"Agust D Style",desc:"Dark K-hip-hop, aggressive",config:{genre:"K-Hip-Hop",sub:"Aggressive",mood:"Dark & Intense",vocals:["Aggressive rap","K-hip-hop vocal delivery","Native Korean pronunciation"],instruments:["808 Bass","Trap Hi-hats","Piano","Synth Lead"],tempo:"Fast",fx:["Heavy reverb","Distortion","808 glide"],structure:"Hip-Hop"}},
+  {name:"Korean Trap",desc:"Hard-hitting Korean rap",config:{genre:"K-Hip-Hop",sub:"Trap",mood:"Dark & Intense",vocals:["Powerful rap delivery","Native Korean pronunciation","Ad-lib heavy"],instruments:["808 Bass","Trap Hi-hats","Synth Lead","Piano"],tempo:"Fast",fx:["Heavy reverb","808 glide","Distortion"],structure:"Hip-Hop"}},
+  {name:"Spring Day Vibes",desc:"Emotional nostalgic ballad",config:{genre:"K-Ballad",sub:"Piano Ballad",mood:"Melancholic",vocals:["Emotional ballad singing","Falsetto","Layered harmonies"],instruments:["Piano","Violin","Cello","Guitar (Acoustic)"],tempo:"Slow",fx:["Heavy reverb","Delay throws","Stereo widening"],structure:"Ballad"}},
+  {name:"IDOL Energy",desc:"High-energy K-pop banger",config:{genre:"K-Pop",sub:"Dance Pop",mood:"Energetic",vocals:["K-hip-hop vocal delivery","Belting","Ad-lib heavy","Chanting"],instruments:["808 Bass","Synth Lead","Trumpet","Live Drums","Claps"],tempo:"Fast",fx:["Sidechain compression","Filter sweep","Risers & impacts"],structure:"K-Pop"}},
+  {name:"mono. Aesthetic",desc:"Lo-fi introspective vibes",config:{genre:"K-R&B",sub:"Alternative R&B",mood:"Chill & Dreamy",vocals:["Smooth R&B vocals","Spoken word","Breathy vocals"],instruments:["Rhodes","Synth Pad","Guitar (Acoustic)","Sub Bass"],tempo:"Slow",fx:["Lo-fi texture","Vinyl crackle","Tape saturation","Heavy reverb"],structure:"Freestyle"}},
+  {name:"Epic Battle Rap",desc:"Cinematic aggressive anthem",config:{genre:"Hip-Hop",sub:"Lyrical",mood:"Epic",vocals:["Aggressive rap","Native Korean pronunciation","Chanting"],instruments:["808 Bass","Synth Lead","Live Drums","Choir"],tempo:"Fast",fx:["Distortion","Sub drops","Risers & impacts","Heavy reverb"],structure:"Anthem"}},
+  {name:"Butter Smooth",desc:"Groovy pop-funk summer",config:{genre:"K-Pop",sub:"Retro Pop",mood:"Groovy",vocals:["Smooth R&B vocals","Falsetto","Ad-lib heavy"],instruments:["Bass Guitar","Rhodes","Guitar (Electric)","Finger Snaps","Claps"],tempo:"Medium",fx:["Stereo widening","Phaser","Filter sweep"],structure:"Standard"}},
+  {name:"Cinematic Intro",desc:"Film score atmospheric",config:{genre:"Other",sub:"Cinematic",mood:"Mysterious",vocals:["Choir","Whisper Layers"],instruments:["Violin","Cello","Piano","Synth Pad","Taiko"],tempo:"Very Slow",fx:["Heavy reverb","Granular synthesis","Reverse effects","Risers & impacts"],structure:"Cinematic"}}
+];
+
+const TIPS=[
+  "\u{1F3AF} Strip style prompts to instruments/voices/beat essentials only",
+  "\u{1F1F0}\u{1F1F7} All lyrics in Korean for authentic Suno vocal delivery",
+  "\u{1F3A4} 'K-hip-hop vocal delivery' + 'native Korean pronunciation' = magic combo",
+  "\u{1F3B5} Don't describe the mood \u2014 describe the SOUND (instruments, rhythm, texture)",
+  "\u26A1 Shorter prompts often work better than long detailed ones",
+  "\u{1F3B9} Mixing traditional instruments with modern beats = unique fusion sound",
+  "\u{1F504} If Suno ignores your style, put the most important element FIRST",
+  "\u{1F3A7} Use [Intro], [Verse], [Chorus], [Bridge], [Outro] tags in lyrics",
+  "\u{1F4A1} 'Male Korean rap vocal' works better than describing a specific rapper",
+  "\u{1F941} Specify beat pattern: 'boom-bap drums' vs 'trap hi-hats' matters a lot"
+];
+
+const T={bg:"#08080e",bg2:"#0e0e18",surface:"#141420",card:"#1a1a2a",border:"#252538",accent:"#e84393",accent2:"#fd79a8",gold:"#f9ca24",neon:"#00ff88",cyan:"#00d2ff",purple:"#a29bfe",text:"#e8e8f0",muted:"#6c6c8a",dim:"#44445a"};
+
+function Chip({name,emoji,isSel,onClick,selColor}){
+  return h("button",{onClick,style:{background:isSel?(selColor||T.accent+"33"):T.surface,border:"1px solid "+(isSel?(selColor||T.accent):T.border),borderRadius:20,padding:"5px 12px",cursor:"pointer",color:isSel?T.text:T.muted,fontSize:12,fontWeight:isSel?600:400,transition:"all 0.2s",display:"flex",alignItems:"center",gap:4}},
+    emoji&&h("span",{style:{fontSize:13}},emoji),name);
+}
+
+function ChipSelect({items,selected,onToggle,multi=true,selColor}){
+  return h("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
+    items.map(item=>{
+      const name=typeof item==="string"?item:(item.name||item.label);
+      const emoji=typeof item==="object"?(item.emoji||item.icon||""):"";
+      const isSel=multi?selected.includes(name):selected===name;
+      return h(Chip,{key:name,name,emoji,isSel,onClick:()=>onToggle(name),selColor});
+    })
+  );
+}
+
+function Sec({title,icon,children,collapse}){
+  const[open,setOpen]=useState(true);
+  return h("div",{style:{background:T.card,borderRadius:14,border:"1px solid "+T.border,overflow:"hidden",marginBottom:12}},
+    h("div",{onClick:collapse?()=>setOpen(!open):undefined,style:{padding:"14px 18px",display:"flex",alignItems:"center",gap:10,cursor:collapse?"pointer":"default",borderBottom:open?"1px solid "+T.border:"none",background:"linear-gradient(135deg,"+T.surface+","+T.card+")"}},
+      h("span",{style:{fontSize:18}},icon),
+      h("span",{style:{fontSize:14,fontWeight:700,color:T.text,flex:1,letterSpacing:.5}},title),
+      collapse&&h("span",{style:{color:T.dim,fontSize:12,transition:"transform 0.3s",transform:open?"rotate(0)":"rotate(-90deg)"}},"\u25BC")
+    ),
+    open&&h("div",{style:{padding:"14px 18px"}},children)
+  );
+}
+
+function Sld({label,value,onChange,min=0,max=100,sfx="",color=T.accent}){
+  const pct=((value-min)/(max-min))*100;
+  return h("div",{style:{marginBottom:10}},
+    h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}},
+      h("span",{style:{fontSize:11,color:T.muted}},label),
+      h("span",{style:{fontSize:11,color,fontWeight:700}},value+sfx)),
+    h("input",{type:"range",min,max,value,onChange:e=>onChange(+e.target.value),style:{width:"100%",background:"linear-gradient(to right,"+color+" "+pct+"%,"+T.border+" "+pct+"%)"}}));
+}
+
+function App(){
+  const[genre,sG]=useState("");const[sub,sS]=useState("");const[mood,sM]=useState("");
+  const[vox,sV]=useState([]);const[inst,sI]=useState([]);const[tmp,sT]=useState("Medium");
+  const[str,sSt]=useState("Standard");const[fx,sF]=useState([]);const[nrg,sN]=useState(70);
+  const[cpx,sC]=useState(60);const[kr,sK]=useState(true);const[notes,sNo]=useState("");
+  const[mode,sMo]=useState("style");const[cp,sCp]=useState("");const[ti,sTi]=useState(0);
+  const[ld,sL]=useState(false);const[ap,sAp]=useState("");const[hist,sH]=useState([]);const[sh,sSh]=useState(false);
+
+  useEffect(()=>{setTimeout(()=>sL(true),50)},[]);
+  useEffect(()=>{const iv=setInterval(()=>sTi(i=>(i+1)%TIPS.length),5000);return()=>clearInterval(iv)},[]);
+
+  const tog=(a,sa,v)=>sa(p=>p.includes(v)?p.filter(x=>x!==v):[...p,v]);
+  const preset=p=>{const c=p.config;sG(c.genre);sS(c.sub);sM(c.mood);sV(c.vocals);sI(c.instruments);sT(c.tempo);sF(c.fx);sSt(c.structure);sAp(p.name)};
+  const reset=()=>{sG("");sS("");sM("");sV([]);sI([]);sT("Medium");sSt("Standard");sF([]);sN(70);sC(60);sNo("");sAp("")};
+
+  const styleP=useCallback(()=>{
+    const p=[];
+    if(genre)p.push(sub?sub+" "+genre:genre);
+    const mo=MOODS.find(m=>m.name===mood);
+    if(mo)p.push(mo.tags.slice(0,2).join(", "));
+    if(inst.length)p.push(inst.join(", "));
+    if(vox.length)p.push(vox.join(", "));
+    const tp=TEMPO_RANGES.find(t=>t.label===tmp);
+    if(tp)p.push(tmp.toLowerCase()+" tempo ("+tp.bpm+" BPM)");
+    if(kr)p.push("K-hip-hop vocal delivery, native Korean pronunciation");
+    if(fx.length)p.push(fx.join(", "));
+    if(nrg>80)p.push("high energy");else if(nrg<30)p.push("subdued, minimal energy");
+    if(notes.trim())p.push(notes.trim());
+    return p.join(", ");
+  },[genre,sub,mood,inst,vox,tmp,kr,fx,nrg,notes]);
+
+  const fullP=useCallback(()=>{
+    const l=["=== SUNO PROMPT ===\n","[Style of Music]",styleP(),""];
+    const so=STRUCTURES.find(s=>s.name===str);
+    if(so){l.push("[Structure]",so.pattern,"")}
+    l.push("[Production Notes]");
+    if(inst.length)l.push("Key instruments: "+inst.join(", "));
+    if(fx.length)l.push("FX chain: "+fx.join(", "));
+    l.push("Energy: "+nrg+"% | Complexity: "+cpx+"%");
+    if(kr)l.push("All lyrics in Korean for authentic vocal delivery");
+    if(notes.trim()){l.push("","[Custom Notes]",notes.trim())}
+    return l.join("\n");
+  },[styleP,inst,fx,nrg,cpx,kr,str,notes]);
+
+  const cur=mode==="style"?styleP():fullP();
+  const copy=()=>{navigator.clipboard.writeText(cur).then(()=>{sCp("\u2713");sH(p=>[{prompt:cur,time:new Date().toLocaleTimeString(),genre,mood},...p].slice(0,20));setTimeout(()=>sCp(""),2000)})};
+  const cc=cur.length;const ccol=cc>400?"#ff6b6b":cc>250?T.gold:T.neon;
+
+  return h("div",{style:{minHeight:"100vh",background:T.bg,color:T.text,fontFamily:"'JetBrains Mono','Fira Code',monospace",opacity:ld?1:0,transition:"opacity 0.5s"}},
+
+    h("div",{style:{padding:"28px 24px 16px",background:"linear-gradient(180deg,"+T.bg2+","+T.bg+")",borderBottom:"1px solid "+T.border}},
+      h("div",{style:{maxWidth:900,margin:"0 auto"}},
+        h("div",{style:{display:"flex",alignItems:"center",gap:12,marginBottom:8}},
+          h("div",{style:{width:36,height:36,borderRadius:10,background:"linear-gradient(135deg,"+T.accent+","+T.purple+")",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}},"\u{1F39B}\uFE0F"),
+          h("div",null,
+            h("h1",{style:{fontFamily:"Outfit",fontSize:26,fontWeight:900,margin:0,background:"linear-gradient(135deg,"+T.accent+","+T.purple+","+T.cyan+")",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}},"Suno Prompt Builder"),
+            h("p",{style:{fontSize:10,color:T.muted,margin:0,letterSpacing:2}},"PRODUCTION SUITE \xB7 STYLE PROMPT GENERATOR"))),
+        h("div",{key:ti,style:{background:T.surface+"88",borderRadius:8,padding:"8px 14px",fontSize:11,color:T.gold,border:"1px solid "+T.gold+"22",animation:"slideIn 0.3s ease"}},TIPS[ti]))),
+
+    h("div",{style:{maxWidth:900,margin:"0 auto",padding:"16px 20px 60px",display:"flex",gap:16,flexWrap:"wrap"}},
+
+      h("div",{style:{flex:"1 1 380px",minWidth:0}},
+
+        h(Sec,{title:"Quick Presets",icon:"\u26A1"},
+          h("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:8}},
+            PRESETS.map(p=>h("button",{key:p.name,onClick:()=>preset(p),style:{background:ap===p.name?T.accent+"22":T.surface,border:"1px solid "+(ap===p.name?T.accent:T.border),borderRadius:10,padding:"10px 12px",cursor:"pointer",textAlign:"left"}},
+              h("div",{style:{fontSize:12,fontWeight:700,color:ap===p.name?T.accent:T.text,marginBottom:2}},p.name),
+              h("div",{style:{fontSize:10,color:T.muted,lineHeight:1.3}},p.desc))))),
+
+        h(Sec,{title:"Genre",icon:"\u{1F3B5}"},
+          h(ChipSelect,{items:Object.entries(GENRES).map(([n,{icon:ic}])=>({name:n,icon:ic})),selected:genre,multi:false,onToggle:g=>{sG(g===genre?"":g);sS("")}}),
+          genre&&GENRES[genre]&&h("div",{style:{marginTop:10}},
+            h("div",{style:{fontSize:10,color:T.muted,marginBottom:6,letterSpacing:1}},"SUB-GENRE"),
+            h(ChipSelect,{items:GENRES[genre].sub,selected:sub,multi:false,onToggle:s=>sS(s===sub?"":s),selColor:T.purple+"44"}))),
+
+        h(Sec,{title:"Mood & Atmosphere",icon:"\u{1F3AD}"},
+          h(ChipSelect,{items:MOODS,selected:mood,multi:false,onToggle:m=>sM(m===mood?"":m),selColor:T.gold+"33"})),
+
+        h(Sec,{title:"Vocal Style",icon:"\u{1F3A4}",collapse:true},
+          h("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:10}},
+            h("button",{onClick:()=>sK(!kr),style:{background:kr?T.neon+"22":T.surface,border:"1px solid "+(kr?T.neon:T.border),borderRadius:8,padding:"6px 14px",cursor:"pointer",fontSize:11,fontWeight:600,color:kr?T.neon:T.muted}},"\u{1F1F0}\u{1F1F7} Korean Vocal Delivery "+(kr?"ON":"OFF"))),
+          h(ChipSelect,{items:VOCAL_STYLES,selected:vox,onToggle:v=>tog(vox,sV,v),selColor:T.accent+"33"})),
+
+        h(Sec,{title:"Instruments & Sounds",icon:"\u{1F3B9}",collapse:true},
+          Object.entries(INSTRUMENTS).map(([cat,items])=>h("div",{key:cat,style:{marginBottom:12}},
+            h("div",{style:{fontSize:10,color:T.cyan,marginBottom:6,letterSpacing:1,fontWeight:600}},cat.toUpperCase()),
+            h(ChipSelect,{items,selected:inst,onToggle:i=>tog(inst,sI,i),selColor:T.cyan+"22"})))),
+
+        h(Sec,{title:"Tempo & Energy",icon:"\u23F1\uFE0F",collapse:true},
+          h("div",{style:{fontSize:10,color:T.muted,marginBottom:6,letterSpacing:1}},"TEMPO"),
+          h(ChipSelect,{items:TEMPO_RANGES,selected:tmp,multi:false,onToggle:t=>sT(t===tmp?"Medium":t),selColor:T.gold+"33"}),
+          h("div",{style:{marginTop:14}},
+            h(Sld,{label:"Energy Level",value:nrg,onChange:sN,color:T.accent,sfx:"%"}),
+            h(Sld,{label:"Complexity",value:cpx,onChange:sC,color:T.purple,sfx:"%"}))),
+
+        h(Sec,{title:"Song Structure",icon:"\u{1F4D0}",collapse:true},
+          h("div",{style:{display:"flex",flexDirection:"column",gap:6}},
+            STRUCTURES.map(s=>h("button",{key:s.name,onClick:()=>sSt(s.name),style:{background:str===s.name?T.purple+"22":"transparent",border:"1px solid "+(str===s.name?T.purple:T.border),borderRadius:8,padding:"8px 12px",cursor:"pointer",textAlign:"left"}},
+              h("div",{style:{fontSize:12,fontWeight:600,color:str===s.name?T.purple:T.text}},s.name),
+              h("div",{style:{fontSize:10,color:T.muted,marginTop:2}},s.pattern))))),
+
+        h(Sec,{title:"Production FX",icon:"\u{1F39A}\uFE0F",collapse:true},
+          h(ChipSelect,{items:PRODUCTION_FX,selected:fx,onToggle:f=>tog(fx,sF,f),selColor:T.neon+"22"})),
+
+        h(Sec,{title:"Custom Notes",icon:"\u{1F4DD}",collapse:true},
+          h("textarea",{value:notes,onChange:e=>sNo(e.target.value),placeholder:"Add specific instructions...",rows:3,style:{width:"100%",background:T.surface,border:"1px solid "+T.border,borderRadius:8,padding:"10px 12px",color:T.text,fontSize:12,resize:"vertical",fontFamily:"'JetBrains Mono'",boxSizing:"border-box"}}))),
+
+      h("div",{style:{flex:"1 1 340px",minWidth:0,position:"sticky",top:16,alignSelf:"flex-start"}},
+
+        h("div",{style:{background:"linear-gradient(135deg,"+T.card+","+T.surface+")",borderRadius:14,border:"1px solid "+T.border,overflow:"hidden",marginBottom:12}},
+          h("div",{style:{padding:"14px 18px",display:"flex",alignItems:"center",gap:8,borderBottom:"1px solid "+T.border,background:T.surface+"88"}},
+            h("span",{style:{fontSize:14}},"\u{1F4CB}"),
+            h("span",{style:{fontSize:13,fontWeight:700,color:T.text,flex:1}},"Generated Prompt"),
+            h("div",{style:{display:"flex",gap:4}},
+              ["style","full"].map(m=>h("button",{key:m,onClick:()=>sMo(m),style:{background:mode===m?T.accent:"transparent",border:"1px solid "+(mode===m?T.accent:T.border),borderRadius:6,padding:"3px 10px",cursor:"pointer",fontSize:10,fontWeight:600,color:mode===m?"#fff":T.muted}},m[0].toUpperCase()+m.slice(1))))),
+          h("div",{style:{padding:"16px 18px"}},
+            h("pre",{style:{background:T.bg,borderRadius:10,padding:16,fontSize:12,lineHeight:1.7,color:T.neon,whiteSpace:"pre-wrap",wordBreak:"break-word",fontFamily:"'JetBrains Mono'",border:"1px solid "+T.border,maxHeight:300,overflowY:"auto",margin:0}},cur||"\u2190 Select options to build your prompt"),
+            h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:10}},
+              h("span",{style:{fontSize:10,color:ccol,fontWeight:600}},cc+" chars "+(cc>400?"\u26A0\uFE0F too long":cc>250?"\u2014 good length":"\u2014 short & focused \u2713")),
+              h("div",{style:{display:"flex",gap:6}},
+                h("button",{onClick:reset,style:{background:"transparent",border:"1px solid "+T.border,borderRadius:8,padding:"8px 16px",cursor:"pointer",fontSize:11,fontWeight:600,color:T.muted}},"Reset"),
+                h("button",{onClick:copy,style:{background:cp?T.neon:"linear-gradient(135deg,"+T.accent+","+T.purple+")",border:"none",borderRadius:8,padding:"8px 20px",cursor:"pointer",fontSize:12,fontWeight:700,color:cp?T.bg:"#fff",transition:"all 0.2s"}},cp||"Copy Prompt"))))),
+
+        h("div",{style:{background:T.card,borderRadius:14,border:"1px solid "+T.border,padding:"14px 18px",marginBottom:12}},
+          h("div",{style:{fontSize:12,fontWeight:700,color:T.text,marginBottom:10}},"\u{1F39B}\uFE0F Active Selections"),
+          h("div",{style:{display:"flex",flexDirection:"column",gap:6,fontSize:11}},
+            genre&&h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Genre:"),h("span",{style:{color:T.accent}},sub?sub+" "+genre:genre)),
+            mood&&h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Mood:"),h("span",{style:{color:T.gold}},mood)),
+            vox.length>0&&h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Vocals:"),h("span",{style:{color:T.accent2}},vox.length+" selected")),
+            inst.length>0&&h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Instruments:"),h("span",{style:{color:T.cyan}},inst.length+" selected")),
+            h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Tempo:"),h("span",{style:{color:T.gold}},tmp)),
+            h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Structure:"),h("span",{style:{color:T.purple}},str)),
+            fx.length>0&&h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"FX:"),h("span",{style:{color:T.neon}},fx.length+" effects")),
+            h("div",null,h("span",{style:{color:T.muted,width:80,display:"inline-block"}},"Korean:"),h("span",{style:{color:kr?T.neon:T.dim}},kr?"Yes":"No")))),
+
+        h("div",{style:{background:T.card,borderRadius:14,border:"1px solid "+T.border,overflow:"hidden"}},
+          h("div",{onClick:()=>sSh(!sh),style:{padding:"12px 18px",display:"flex",alignItems:"center",gap:8,cursor:"pointer",borderBottom:sh?"1px solid "+T.border:"none"}},
+            h("span",{style:{fontSize:14}},"\u{1F4DC}"),
+            h("span",{style:{fontSize:12,fontWeight:700,color:T.text,flex:1}},"History ("+hist.length+")"),
+            h("span",{style:{color:T.dim,fontSize:12,transform:sh?"rotate(0)":"rotate(-90deg)",transition:"transform 0.3s"}},"\u25BC")),
+          sh&&h("div",{style:{padding:"10px 18px",maxHeight:250,overflowY:"auto"}},
+            hist.length===0?h("p",{style:{fontSize:11,color:T.muted,textAlign:"center",padding:12}},"Copy a prompt to save it here"):
+            hist.map((x,i)=>h("div",{key:i,onClick:()=>{navigator.clipboard.writeText(x.prompt);sCp("\u2713");setTimeout(()=>sCp(""),1500)},style:{background:T.surface,borderRadius:8,padding:"8px 12px",marginBottom:6,cursor:"pointer",border:"1px solid "+T.border}},
+              h("div",{style:{fontSize:10,color:T.muted,marginBottom:2}},x.time+" \xB7 "+(x.genre||"Custom")+" \xB7 "+(x.mood||"\u2014")),
+              h("div",{style:{fontSize:11,color:T.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},x.prompt.slice(0,80)+"..."))))))),
+
+    h("div",{style:{textAlign:"center",padding:20,borderTop:"1px solid "+T.border,background:T.bg2}},
+      h("span",{style:{fontSize:10,color:T.dim}},"Suno Prompt Builder \xB7 Built by demosaii \xB7 \u{1F39B}\uFE0F Strip it down, let the music speak")));
+}
+
+ReactDOM.render(h(App),document.getElementById("root"));
+</script>
+</body>
+</html>
